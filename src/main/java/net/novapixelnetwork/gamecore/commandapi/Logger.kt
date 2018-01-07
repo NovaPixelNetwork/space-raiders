@@ -1,4 +1,4 @@
-package net.novapixelnetwork.gamecore
+package net.novapixelnetwork.gamecore.commandapi
 
 import net.novapixelnetwork.spaceraiders.SpaceRaiders
 
@@ -6,7 +6,7 @@ class Logger {
 
     private val prefix = "SpaceRaiders";
 
-    fun log(msg:String, level:Level){
+    fun log(msg:String, level: Level){
         if(!(level == Level.DEBUG && SpaceRaiders.getPlugin().config.getBoolean("debug"))){
             System.out.println("[$prefix] [$level] $msg")
         }
@@ -14,7 +14,7 @@ class Logger {
 
 
     companion object {
-        var logger:Logger = Logger();
+        var logger: Logger = Logger();
     }
 
     enum class Level {
