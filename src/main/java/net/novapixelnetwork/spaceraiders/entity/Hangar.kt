@@ -6,10 +6,7 @@ import net.novapixelnetwork.gamecore.mysql.Column
 /**
  * Created by owner on 1/5/2018.
  */
-class Hangar: Cacheable {
+@Cacheable("hangars") class Hangar {
 
 
-    override fun table(): String {
-        return "hangars"
-    }
 }

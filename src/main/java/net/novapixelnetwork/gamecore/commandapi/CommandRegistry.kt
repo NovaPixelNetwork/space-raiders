@@ -1,5 +1,6 @@
 package net.novapixelnetwork.gamecore.commandapi
 
+import net.novapixelnetwork.spaceraiders.SpaceRaiders
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandMap
@@ -7,6 +8,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.lang.reflect.Field
 import java.util.*
+import java.util.logging.Level
 
 class CommandRegistry {
 
@@ -21,7 +23,7 @@ class CommandRegistry {
         val serverCmds: CommandMap = cmdMap.get(Bukkit.getServer()) as CommandMap
         serverCmds.register(section.name, BukkitCommand(section))
 
-        Logger.logger.log("Registered command " + section.name, Logger.Level.INFO)
+        SpaceRaiders.getLogger().log(Level.INFO, "Registered command " + section.name)
     }
 
     companion object {

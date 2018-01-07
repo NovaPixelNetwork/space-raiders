@@ -7,15 +7,14 @@ import java.util.*
 /**
  * Created by owner on 1/5/2018.
  */
-class SRPlayer(val uuid: UUID): Cacheable {
+@Cacheable("players") class SRPlayer( uuid: UUID) {
+
+    @Column("uuid", "VARCHAR(36) PRIMARY KEY")
+    val uuid = uuid
 
     @Column("credits", "INTEGER")
     var credits: Int? = null
 
-    @Column("squad", "STRING")
+    @Column("squad", "VARCHAR(16)")
     var squad: UUID? = null
-
-    override fun table(): String {
-        return "players"
-    }
 }
