@@ -19,7 +19,7 @@ import kotlin.reflect.full.findAnnotation
 class MySQLManager {
 
     private var connectionPool: ArrayList<Connection> = ArrayList()
-    private var types: ArrayList<KClass<*>> = ArrayList()
+    internal var types: ArrayList<KClass<*>> = ArrayList()
     private val poolSize = 5
 
     fun grabConnection(): Connection {
@@ -111,7 +111,7 @@ class MySQLManager {
         }
         returnConnection(con)
 
-        ObjectCacheManager.INSTANCE.startTask()
+        ObjectCacheManager.INSTANCE.init()
 
     }
 

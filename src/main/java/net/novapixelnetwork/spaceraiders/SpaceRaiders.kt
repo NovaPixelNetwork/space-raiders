@@ -15,12 +15,6 @@ import java.util.logging.Logger
 
 class SpaceRaiders : JavaPlugin(){
 
-    private val chat_prefix = ""
-
-    init {
-
-    }
-
     override fun onEnable() {
 
         config.options().copyDefaults(true)
