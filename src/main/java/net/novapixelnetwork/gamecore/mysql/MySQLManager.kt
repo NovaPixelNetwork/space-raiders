@@ -12,6 +12,8 @@ import java.util.logging.Level
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMembers
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.memberFunctions
+import kotlin.reflect.full.memberProperties
 
 /**
  * Created by owner on 1/5/2018.
@@ -39,6 +41,23 @@ class MySQLManager {
             throw Exception("Entity type missing Cacheable annotation!")
         types.add(entityType)
     }
+    fun getPrimaryKeyColumn(clazz: KClass<*>): String? {
+        for(member in clazz.declaredMembers){
+            if(member.findAnnotation<Column>() != null && member.findAnnotation<PrimaryKey>() != null){
+                return member.findAnnotation<Column>()!!.name
+            }
+        }
+        return null
+    }
+
+    fun getColumnValue(obj: CacheableEntity, column: String): Any? {
+        for(field in obj::class.memberProperties){
+            if(field.findAnnotation<Column>() != null && field.findAnnotation<Column>()!!.name == column){
+                return field.getter.call(obj)
+            }
+        }
+        return null
+    }
 
 
     companion object {
@@ -61,7 +80,10 @@ class MySQLManager {
             for(field in clazz.declaredMembers){
                 var column = field.findAnnotation<Column>()
                 if(column != null){
-                    classColumns.put(column.name, column.type)
+                    var type = column.type
+                    if(field.findAnnotation<PrimaryKey>() != null)
+                        type += " PRIMARY KEY"
+                    classColumns.put(column.name, type)
                 }
             }
             val name = clazz.findAnnotation<Cacheable>()!!.table

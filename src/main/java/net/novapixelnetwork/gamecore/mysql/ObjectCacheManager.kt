@@ -2,14 +2,17 @@ package net.novapixelnetwork.gamecore.mysql
 
 import net.novapixelnetwork.spaceraiders.SpaceRaiders
 import org.bukkit.scheduler.BukkitRunnable
+import java.sql.PreparedStatement
 import kotlin.reflect.KClass
-import kotlin.reflect.full.declaredMembers
+import kotlin.jvm.javaClass
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 
 class ObjectCacheManager {
 
-    private var cache: HashMap<KClass<*>, List<CacheableEntity>> = HashMap()
+    var cache: HashMap<KClass<*>, List<CacheableEntity>> = HashMap()
 
     fun init(){
         for(type in MySQLManager.INSTANCE.types){
@@ -25,8 +28,42 @@ class ObjectCacheManager {
 
 
 
+    inline fun <reified T : CacheableEntity> getFromCache(key: Any): T? {
+        val primary = MySQLManager.INSTANCE.getPrimaryKeyColumn(T::class)
+        if(primary != null){
+            for(obj in cache[T::class]!!){
+                val objKey = MySQLManager.INSTANCE.getColumnValue(obj, primary)!!
+                if(objKey == key){
+                    return obj as T
+                }
+            }
+            val con = MySQLManager.INSTANCE.grabConnection()
+
+            val ps: PreparedStatement = con.prepareStatement("SELECT * FROM " + T::class.findAnnotation<Cacheable>()!!.table + " WHERE $primary=?")
+            ps.setString(1, key.toString())
+            println(ps.toString())
+            val result = ps.executeQuery()
+
+            MySQLManager.INSTANCE.returnConnection(con)
+            if(result.next()){
+                println(T::class.java.constructors[0].parameterCount)
+                var inst = T::class.java.constructors[0].newInstance(key) as T
+                for(member in inst::class.memberProperties){
+                    if(member.findAnnotation<Column>() != null && member.findAnnotation<PrimaryKey>() == null && member is KMutableProperty<*>){
+                        println(result.getObject(member.findAnnotation<Column>()!!.name))
+                        member.setter.call(inst, result.getObject(member.findAnnotation<Column>()!!.name))
+                    }
+                }
+                return inst
+            }else{
+                return null
+            }
+        }
+        return null
+    }
 
     internal class CacheGarbageCollector: BukkitRunnable() {
+
         override fun run() {
 
             val cache = ObjectCacheManager.INSTANCE.cache
@@ -34,7 +71,6 @@ class ObjectCacheManager {
             for((type, value) in cache){
                 val objs = value.toMutableList()
                 for(entity in value){
-
                     if(entity.shouldExpire()){
                         val c = MySQLManager.INSTANCE.grabConnection()
                         objs.remove(entity)
@@ -53,7 +89,7 @@ class ObjectCacheManager {
 
                                 }
                                 x++
-                                if(column.type.contains("PRIMARY KEY")) {
+                                if(field.findAnnotation<PrimaryKey>() != null) {
                                     primary = column.name
                                     primaryVal = field.getter.call(entity)
                                     continue

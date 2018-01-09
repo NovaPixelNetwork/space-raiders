@@ -10,7 +10,7 @@ import java.lang.reflect.Field
 import java.util.*
 import java.util.logging.Level
 
-class CommandRegistry {
+object CommandRegistry {
 
     var cmds: HashMap<String, CommandSection> = HashMap();
 
@@ -24,12 +24,6 @@ class CommandRegistry {
         serverCmds.register(section.name, BukkitCommand(section))
 
         SpaceRaiders.getLogger().log(Level.INFO, "Registered command " + section.name)
-    }
-
-    companion object {
-
-        var INSTANCE = CommandRegistry()
-            private set(instance) {}
     }
 
     internal fun getTree(root: CommandSection): HashMap<String, CommandSection> {
