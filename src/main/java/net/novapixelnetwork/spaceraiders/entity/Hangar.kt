@@ -1,7 +1,6 @@
 package net.novapixelnetwork.spaceraiders.entity
 
-import net.novapixelnetwork.gamecore.mysql.Cacheable
-import net.novapixelnetwork.gamecore.mysql.Column
+import net.novapixelnetwork.gamecore.mysql.deprecated.Cacheable
 
 /**
  * Created by owner on 1/5/2018.

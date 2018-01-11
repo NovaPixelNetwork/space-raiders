@@ -13,8 +13,8 @@ class CommandHandler {
 
 
     internal fun execute(sender: Player, cmd: String, args: List<String>) {
-        var section = CommandRegistry.INSTANCE.getSection(cmd)!!
-        for (set in CommandRegistry.INSTANCE.getTree(section)) {
+        var section = CommandRegistry.getSection(cmd)!!
+        for (set in CommandRegistry.getTree(section)) {
             if (StringUtils.join(args, " ").startsWith(set.key)) {
                 var modifiedArgs: MutableList<String> = args.subList(if (StringUtils.split(set.key, ' ').isNotEmpty()) StringUtils.split(set.key, ' ').size else 0, args.size).toMutableList()
                 if (modifiedArgs.size > 0) {

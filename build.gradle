@@ -29,6 +29,9 @@ repositories {
     maven {
         url = "http://repo.dmulloy2.net/nexus/repository/public/"
     }
+    maven {
+        url  "https://dl.bintray.com/kotlin/squash"
+    }
     mavenLocal()
 
 }
@@ -42,8 +45,9 @@ dependencies {
     compile "org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
     compile "com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT"
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    compile 'org.jetbrains.squash:squash:0.2.3'
 }
 
 

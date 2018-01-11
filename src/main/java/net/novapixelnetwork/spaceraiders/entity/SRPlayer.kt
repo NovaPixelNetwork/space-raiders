@@ -1,15 +1,18 @@
 package net.novapixelnetwork.spaceraiders.entity
 
-import net.novapixelnetwork.gamecore.mysql.Cacheable
-import net.novapixelnetwork.gamecore.mysql.CacheableEntity
-import net.novapixelnetwork.gamecore.mysql.Column
-import net.novapixelnetwork.gamecore.mysql.PrimaryKey
+import net.novapixelnetwork.gamecore.mysql.deprecated.Cacheable
+import net.novapixelnetwork.gamecore.mysql.deprecated.CacheableEntity
+import net.novapixelnetwork.gamecore.mysql.deprecated.Column
+import net.novapixelnetwork.gamecore.mysql.deprecated.PrimaryKey
 import java.util.*
 
 /**
  * Created by owner on 1/5/2018.
  */
 @Cacheable("players") class SRPlayer(uuid: String): CacheableEntity() {
+
+    override val expireTime: Int
+        get() = 2000
 
     @PrimaryKey
     @Column("uuid", "VARCHAR(36)")

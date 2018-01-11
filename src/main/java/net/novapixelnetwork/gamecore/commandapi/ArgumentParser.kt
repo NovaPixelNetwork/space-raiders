@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
 
 class ArgumentParser {
 
-    val arguments = HashMap<KClass<*>, Function<String, Any?>>()
+    private val arguments = HashMap<KClass<*>, Function<String, Any?>>()
 
     init {
 

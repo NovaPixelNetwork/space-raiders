@@ -12,7 +12,7 @@ import java.util.logging.Level
 
 object CommandRegistry {
 
-    var cmds: HashMap<String, CommandSection> = HashMap();
+    var cmds: HashMap<String, CommandSection> = HashMap()
 
     fun registerCommand(section: CommandSection){
         cmds.put(section.name, section)
