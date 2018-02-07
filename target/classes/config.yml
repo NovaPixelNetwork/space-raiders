@@ -1,6 +1,0 @@
-debug: true
-mysql:
-  host: localhost
-  schema: spaceraiders
-  user: root
-  password: password
