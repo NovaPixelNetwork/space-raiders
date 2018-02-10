@@ -1,10 +1,10 @@
-package net.novapixelnetwork.spaceraiders.entity
+package net.novapixelnetwork.spaceraiders.data
 
 import net.novapixelnetwork.gamecore.mysql.Connections
 import net.novapixelnetwork.spaceraiders.SpaceRaiders
+import net.novapixelnetwork.spaceraiders.entity.*
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
@@ -14,6 +14,10 @@ import java.util.*
 object DataManager: Listener{
 
     private val cachedPlayers: HashMap<UUID, SRPlayer> = HashMap()
+    private val squads: HashMap<Int, Squad> = HashMap()
+    private val ships: HashMap<Int, Ship> = HashMap()
+    private val hangars: HashMap<Int, Hangar> = HashMap()
+    private val planets: HashMap<Int, Planet> = HashMap()
 
     init {
         Bukkit.getPluginManager().registerEvents(this, SpaceRaiders.getPlugin())
@@ -28,7 +32,19 @@ object DataManager: Listener{
         }
     }
 
-    fun createPlayer(player: OfflinePlayer): SRPlayer {
+    fun getHangar(hangarID: Int): Hangar {
+
+    }
+
+    fun getPlanet(planetID: Int): Planet {
+
+    }
+
+    fun getShip(shipID: Int): Ship {
+
+    }
+
+    private fun createPlayer(player: OfflinePlayer): SRPlayer {
         val c = Connections.grabConnection()
         try {
             val ps = c.prepareStatement("INSERT INTO players (uuid, username, squad) VALUES (?, ?, NULL);")
@@ -43,7 +59,7 @@ object DataManager: Listener{
         return pl
     }
 
-    fun getPlayer(uuid: UUID): SRPlayer{
+    fun getPlayer(uuid: UUID): SRPlayer {
         if(cachedPlayers.containsKey(uuid)) return cachedPlayers[uuid]!!
 
         val c = Connections.grabConnection()
@@ -89,7 +105,7 @@ object DataManager: Listener{
         try {
             val ps = c.prepareStatement("UPDATE players SET username=?, squad=?")
             ps.setString(1, player.username)
-            ps.setObject(2, player.gang)
+            ps.setObject(2, player.squad)
             ps.executeUpdate()
         } finally {
             c.close()

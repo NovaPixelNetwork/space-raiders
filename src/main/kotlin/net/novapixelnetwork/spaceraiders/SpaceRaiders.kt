@@ -4,7 +4,7 @@ import com.comphenix.protocol.ProtocolLibrary
 import net.novapixelnetwork.gamecore.commandapi.CommandRegistry
 import net.novapixelnetwork.gamecore.mysql.Connections
 import net.novapixelnetwork.spaceraiders.command.SpaceRaidersCommand
-import net.novapixelnetwork.spaceraiders.entity.DataManager
+import net.novapixelnetwork.spaceraiders.data.DataManager
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
@@ -20,7 +20,6 @@ class SpaceRaiders : JavaPlugin(){
         SpaceRaiders.log = logger
 
         val protocolManager = ProtocolLibrary.getProtocolManager()
-        //protocolManager.addPacketListener(ControlListener(this, PacketType.Play.Client.STEER_VEHICLE))
 
         CommandRegistry.registerCommand(SpaceRaidersCommand("spaceraiders"))
 
