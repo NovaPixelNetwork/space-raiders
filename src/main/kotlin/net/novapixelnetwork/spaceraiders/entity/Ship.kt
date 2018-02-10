@@ -11,6 +11,15 @@ class Ship(val id: Int, val hangar: Hangar, val size: Hangar.Size, val owner: UU
 
     var status = ShipStatus.HANGAR
 
-
+    companion object {
+        fun createTable(): String {
+            return "CREATE TABLE IF NOT EXISTS ships (" +
+                    "id INT NOT NULL AUTO_INCREMENT, " +
+                    "owner VARCHAR(36) NOT NULL," +
+                    "name VARCHAR(16) NULL," +
+                    "hangar INT NOT NULL," +
+                    "PRIMARY KEY (`id`));"
+        }
+    }
 
 }

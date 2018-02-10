@@ -30,7 +30,7 @@ class SRPlayer(val uuid: UUID, var username: String, var squad: Int?)  {
     }
 
     fun getSquad(): Squad? {
-        return if(squad == null) null else DataManager.getSquad(squad)
+        return if(squad == null) null else DataManager.getSquad(squad!!)
     }
 
     companion object {
