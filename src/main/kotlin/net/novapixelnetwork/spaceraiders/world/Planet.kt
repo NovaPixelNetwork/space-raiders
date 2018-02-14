@@ -1,9 +1,7 @@
-package net.novapixelnetwork.spaceraiders.entity
+package net.novapixelnetwork.spaceraiders.world
 
-import net.novapixelnetwork.spaceraiders.data.SpaceLocation
-import org.bukkit.Bukkit
+import net.novapixelnetwork.spaceraiders.world.SpaceLocation
 import org.bukkit.World
-import org.bukkit.WorldCreator
 
 /**
  * Created by owner on 1/5/2018.

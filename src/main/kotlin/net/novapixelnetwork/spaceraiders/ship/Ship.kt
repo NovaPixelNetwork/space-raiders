@@ -1,6 +1,5 @@
-package net.novapixelnetwork.spaceraiders.entity
+package net.novapixelnetwork.spaceraiders.ship
 
-import net.novapixelnetwork.spaceraiders.ship.ShipStatus
 import java.util.*
 
 /**

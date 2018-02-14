@@ -1,8 +1,13 @@
 package net.novapixelnetwork.spaceraiders.data
 
-import net.novapixelnetwork.gamecore.mysql.Connections
+import net.novapixelnetwork.gamecore.sql.Connections
 import net.novapixelnetwork.spaceraiders.SpaceRaiders
-import net.novapixelnetwork.spaceraiders.entity.*
+import net.novapixelnetwork.spaceraiders.player.SRPlayer
+import net.novapixelnetwork.spaceraiders.player.Squad
+import net.novapixelnetwork.spaceraiders.ship.Hangar
+import net.novapixelnetwork.spaceraiders.ship.Ship
+import net.novapixelnetwork.spaceraiders.world.Planet
+import net.novapixelnetwork.spaceraiders.world.SpaceLocation
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.OfflinePlayer

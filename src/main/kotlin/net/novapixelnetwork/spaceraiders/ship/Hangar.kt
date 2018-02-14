@@ -1,6 +1,7 @@
-package net.novapixelnetwork.spaceraiders.entity
+package net.novapixelnetwork.spaceraiders.ship
 
 import net.novapixelnetwork.spaceraiders.data.DataManager
+import net.novapixelnetwork.spaceraiders.world.Planet
 import org.bukkit.Location
 import java.util.*
 

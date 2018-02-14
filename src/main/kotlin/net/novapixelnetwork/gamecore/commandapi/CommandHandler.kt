@@ -2,8 +2,6 @@ package net.novapixelnetwork.gamecore.commandapi
 
 import net.novapixelnetwork.gamecore.messaging.Message
 import net.novapixelnetwork.gamecore.messaging.Messages
-import net.novapixelnetwork.sendMessage
-import net.novapixelnetwork.spaceraiders.enum.MessageType
 import org.apache.commons.lang.StringUtils
 import org.bukkit.entity.Player
 import kotlin.reflect.KClass
@@ -42,7 +40,7 @@ class CommandHandler {
                                         toPass[x] = ArgumentParser.INSTANCE.parse(toPass[x] as String, param.type.classifier as KClass<*>) as Any
 
                                     } catch(exc: ArgumentParseException) {
-                                        sender.sendMessage("Error with argument <${getParamName(param)}>: ${exc.name}", MessageType.ERROR)
+                                        sender.sendMessage(Messages.msg(Message.TYPE_ARGUMENT_CAST_ERROR, getParamName(param), exc.name))
                                         return
                                     } catch(exc: CommandException) {
                                         sender.sendMessage(exc.name)

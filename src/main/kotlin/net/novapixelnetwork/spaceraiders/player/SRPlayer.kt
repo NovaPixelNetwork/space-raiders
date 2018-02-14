@@ -1,4 +1,4 @@
-package net.novapixelnetwork.spaceraiders.entity
+package net.novapixelnetwork.spaceraiders.player
 
 
 import net.novapixelnetwork.spaceraiders.data.DataManager
@@ -35,7 +35,7 @@ class SRPlayer(val uuid: UUID, var username: String, var squad: Int?)  {
 
     companion object {
 
-        fun from(player: Player): SRPlayer{
+        fun from(player: Player): SRPlayer {
             return DataManager.getPlayer(player.uniqueId)
         }
 

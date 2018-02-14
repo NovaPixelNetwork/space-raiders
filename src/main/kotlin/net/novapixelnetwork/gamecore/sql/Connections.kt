@@ -1,4 +1,4 @@
-package net.novapixelnetwork.gamecore.mysql
+package net.novapixelnetwork.gamecore.sql
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -17,9 +17,9 @@ object Connections {
 
     init {
         if(connectionType == ConnectionType.MYSQL){
-            val cf = SpaceRaiders.getPlugin().config.getConfigurationSection("mysql")
+            val cf = SpaceRaiders.getPlugin().config.getConfigurationSection("sql")
             val hcf = HikariConfig()
-            hcf.jdbcUrl = "jdbc:mysql://${cf.getString("host")}:3306/${cf.getString("schema")}?useSSL=false"
+            hcf.jdbcUrl = "jdbc:sql://${cf.getString("host")}:3306/${cf.getString("schema")}?useSSL=false"
             hcf.username = cf.getString("user")
             hcf.password = cf.getString("password")
             hcf.maximumPoolSize = 40
