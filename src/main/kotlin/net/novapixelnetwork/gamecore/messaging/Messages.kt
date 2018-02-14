@@ -26,7 +26,7 @@ object Messages {
         val cfgMsg = ChatColor.translateAlternateColorCodes('&', msgCfg.getString(msg.getConfigPath()))
         for((x, placeholder) in msg.placeholders.withIndex()){
             if(placeholderReplacements.size - 1 >= x){
-                cfgMsg.replace(placeholder, placeholderReplacements[x])
+                cfgMsg.replace("%" + placeholder, placeholderReplacements[x])
             }
         }
         return cfgMsg

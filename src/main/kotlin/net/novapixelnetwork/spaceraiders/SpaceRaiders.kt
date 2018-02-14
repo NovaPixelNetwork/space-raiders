@@ -2,7 +2,7 @@ package net.novapixelnetwork.spaceraiders
 
 import com.comphenix.protocol.ProtocolLibrary
 import net.novapixelnetwork.gamecore.commandapi.CommandRegistry
-import net.novapixelnetwork.gamecore.mysql.Connections
+import net.novapixelnetwork.gamecore.sql.Connections
 import net.novapixelnetwork.spaceraiders.command.SpaceRaidersCommand
 import net.novapixelnetwork.spaceraiders.data.DataManager
 import org.bukkit.Bukkit
@@ -25,6 +25,7 @@ class SpaceRaiders : JavaPlugin(){
 
         Connections.grabConnection().close()
         DataManager.createTables()
+        DataManager.loadSquads()
 
     }
 

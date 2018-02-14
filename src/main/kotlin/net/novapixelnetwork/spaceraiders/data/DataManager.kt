@@ -1,19 +1,26 @@
 package net.novapixelnetwork.spaceraiders.data
 
-import net.novapixelnetwork.gamecore.mysql.Connections
+import net.novapixelnetwork.gamecore.sql.Connections
 import net.novapixelnetwork.spaceraiders.SpaceRaiders
-import net.novapixelnetwork.spaceraiders.entity.*
+import net.novapixelnetwork.spaceraiders.player.SRPlayer
+import net.novapixelnetwork.spaceraiders.player.Squad
+import net.novapixelnetwork.spaceraiders.ship.Hangar
+import net.novapixelnetwork.spaceraiders.ship.Ship
+import net.novapixelnetwork.spaceraiders.world.Planet
+import net.novapixelnetwork.spaceraiders.world.SpaceLocation
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.OfflinePlayer
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import java.util.*
+import kotlin.collections.ArrayList
 
 object DataManager: Listener{
 
-    private val cachedPlayers: HashMap<UUID, SRPlayer> = HashMap()
+    private val players: HashMap<UUID, SRPlayer> = HashMap()
     private val squads: HashMap<Int, Squad> = HashMap()
     private val ships: HashMap<Int, Ship> = HashMap()
     private val hangars: HashMap<Int, Hangar> = HashMap()
@@ -27,21 +34,116 @@ object DataManager: Listener{
         val c = Connections.grabConnection()
         try {
             c.prepareStatement(SRPlayer.createTable()).executeUpdate()
+            c.prepareStatement(Hangar.createTable()).executeUpdate()
+            c.prepareStatement(Planet.createTable()).executeUpdate()
+            c.prepareStatement(Squad.createTable()).executeUpdate()
+            c.prepareStatement(Ship.createTable()).executeUpdate()
         } finally {
             c.close()
         }
     }
 
-    fun getHangar(hangarID: Int): Hangar {
+    fun loadSquads(){
 
     }
 
-    fun getPlanet(planetID: Int): Planet {
+    fun getHangar(hangarID: Int): Hangar? {
+        if(hangars.containsKey(hangarID)) return hangars[hangarID]
 
+        val c = Connections.grabConnection()
+        try {
+            val ps = c.prepareStatement("SELECT * FROM hangars WHERE id=?")
+            ps.setInt(1, hangarID)
+            val rs = ps.executeQuery()
+            if(rs.next()){
+                val planet = planets[rs.getInt("planet")]!!
+                if(!planet.isLoaded())
+                    planet.loadWorld()
+                val center = Location(planet.world!!, rs.getInt("x").toDouble(),
+                        rs.getInt("y").toDouble(),
+                        rs.getInt("z").toDouble())
+                val hangar = Hangar(hangarID, center, Hangar.Size.valueOf(rs.getString("size")),
+                        UUID.fromString(rs.getString("owner")), rs.getInt("ship"),
+                        rs.getBoolean("auto_generated"),
+                        planet)
+                hangars.put(hangar.id, hangar)
+                return hangar
+            }
+        } finally {
+            c.close()
+        }
+        return null
     }
 
-    fun getShip(shipID: Int): Ship {
+    fun getPlanet(planetID: Int): Planet? {
+        if(planets.containsKey(planetID)) return planets[planetID]
+        val c = Connections.grabConnection()
+        try {
+            val ps = c.prepareStatement("SELECT * FROM planets WHERE id=?")
+            ps.setInt(1, planetID)
+            val rs = ps.executeQuery()
+            if(rs.next()){
+                val planet = Planet(planetID, SpaceLocation(rs.getInt("x"), rs.getInt("z")))
+                planets.put(planetID, planet)
+                return planet
+            }
+        } finally {
+            c.close()
+        }
+        return null
+    }
 
+    fun getShip(shipID: Int): Ship? {
+        if(ships.containsKey(shipID)) return ships[shipID]
+
+        val c = Connections.grabConnection()
+        try {
+            val ps = c.prepareStatement("SELECT * FROM ships WHERE id=?")
+            ps.setInt(1, shipID)
+            val rs = ps.executeQuery()
+            if(rs.next()){
+                val hangar = getHangar(rs.getInt("hangar"))!!
+                val ship = Ship(shipID, hangar, hangar.size, UUID.fromString(rs.getString("owner")), rs.getString("name"))
+                ships.put(shipID, ship)
+                return ship
+            }
+        } finally {
+            c.close()
+        }
+        return null
+    }
+
+    fun getSquad(squadID: Int): Squad? {
+        if(squads.containsKey(squadID)) return squads[squadID]
+
+        val c = Connections.grabConnection()
+        try {
+            var ps = c.prepareStatement("SELECT * FROM squads WHERE id=?")
+            ps.setInt(1, squadID)
+            var rs = ps.executeQuery()
+            if(rs.next()){
+                val playersInSquad: MutableList<UUID> = ArrayList()
+                ps = c.prepareStatement("SELECT * FROM players WHERE squad=?")
+                ps.setInt(1, squadID)
+                rs = ps.executeQuery()
+                while(rs.next()){
+                    val uuid = UUID.fromString(rs.getString("uuid"))
+                    if(players.containsKey(uuid)){
+                        playersInSquad.add(uuid)
+                        continue
+                    }
+                    val player = SRPlayer(uuid, rs.getString("username"), squadID)
+                    players.put(player.uuid, player)
+                    playersInSquad.add(player.uuid)
+                }
+                val squad = Squad(squadID, UUID.fromString(rs.getString("owner")), playersInSquad, rs.getString("name"), rs.getInt("planet"))
+                squads.put(squadID, squad)
+                return squad
+            }
+        } finally {
+            c.close()
+        }
+        return null
     }
 
     private fun createPlayer(player: OfflinePlayer): SRPlayer {
@@ -55,12 +157,12 @@ object DataManager: Listener{
             c.close()
         }
         val pl = SRPlayer(player.uniqueId, player.name, null)
-        cachedPlayers.put(pl.uuid, pl)
+        players.put(pl.uuid, pl)
         return pl
     }
 
     fun getPlayer(uuid: UUID): SRPlayer {
-        if(cachedPlayers.containsKey(uuid)) return cachedPlayers[uuid]!!
+        if(players.containsKey(uuid)) return players[uuid]!!
 
         val c = Connections.grabConnection()
         try {
@@ -69,7 +171,7 @@ object DataManager: Listener{
             val rs = ps.executeQuery()
             if(rs.next()){
                 val player = SRPlayer(uuid, Bukkit.getOfflinePlayer(uuid).name, rs.getInt("squad"))
-                cachedPlayers.put(uuid, player)
+                players.put(uuid, player)
                 return player
             }else {
                 return createPlayer(Bukkit.getOfflinePlayer(uuid))
@@ -80,7 +182,7 @@ object DataManager: Listener{
     }
 
     fun getPlayer(username: String): SRPlayer?{
-        for((_,v) in cachedPlayers){
+        for((_,v) in players){
             if(v.username.equals(username, true))
                 return v
         }
@@ -92,7 +194,7 @@ object DataManager: Listener{
             if(rs.next()){
                 val player = SRPlayer(UUID.fromString(rs.getString("uuid")), rs.getString("username"), rs.getInt("squad"))
                 player.cached = true
-                cachedPlayers.put(player.uuid, player)
+                players.put(player.uuid, player)
                 return player
             }else return null
         } finally {
@@ -120,8 +222,8 @@ object DataManager: Listener{
 
     @EventHandler
     private fun onPlayerQuit(e: PlayerQuitEvent){
-        savePlayerData(cachedPlayers[e.player.uniqueId]!!)
-        cachedPlayers.remove(e.player.uniqueId)
+        savePlayerData(players[e.player.uniqueId]!!)
+        players.remove(e.player.uniqueId)
     }
 
 }

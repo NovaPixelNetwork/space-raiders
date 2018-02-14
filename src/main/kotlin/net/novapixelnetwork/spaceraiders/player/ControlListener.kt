@@ -1,4 +1,4 @@
-package net.novapixelnetwork.spaceraiders.listener
+package net.novapixelnetwork.spaceraiders.player
 
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.events.ListenerPriority

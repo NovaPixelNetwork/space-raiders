@@ -8,7 +8,7 @@ import net.novapixelnetwork.gamecore.commandapi.CommandSection
 import org.bukkit.entity.Player
 import net.minecraft.server.v1_12_R1.PacketPlayOutSpawnEntityLiving
 import net.minecraft.server.v1_12_R1.EntityArmorStand
-import net.novapixelnetwork.gamecore.mysql.Connections
+import net.novapixelnetwork.gamecore.sql.Connections
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld
 
 
