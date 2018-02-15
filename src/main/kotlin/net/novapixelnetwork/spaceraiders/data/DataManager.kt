@@ -71,9 +71,12 @@ object DataManager: Listener{
             c.close()
         }
 
+        //Load directories
         val parts = File(SpaceRaiders.getPlugin().dataFolder, "parts")
         val hulls = File(parts, "hulls")
         val engines = File(parts, "engines")
+        val ships = File(SpaceRaiders.getPlugin().dataFolder, "ships")
+        ships.mkdir()
         hulls.mkdirs()
         engines.mkdirs()
 

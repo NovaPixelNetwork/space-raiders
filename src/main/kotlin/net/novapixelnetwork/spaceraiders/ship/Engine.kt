@@ -1,11 +1,16 @@
 package net.novapixelnetwork.spaceraiders.ship
 
+import com.boydti.fawe.`object`.schematic.Schematic
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat
+import net.novapixelnetwork.spaceraiders.data.DataFolders
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.util.Vector
 import java.io.File
 import java.io.FileNotFoundException
 
 class Engine(val nameID: String, val displayName: String, val speedModifier: Double, val hullLink: Vector) {
+
+    val schematic: Schematic = ClipboardFormat.SCHEMATIC.load(File(DataFolders.engines, "${nameID}.schematic"))
 
     companion object {
 

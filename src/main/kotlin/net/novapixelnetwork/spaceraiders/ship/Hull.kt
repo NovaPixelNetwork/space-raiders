@@ -1,7 +1,10 @@
 package net.novapixelnetwork.spaceraiders.ship
 
+import com.boydti.fawe.`object`.schematic.Schematic
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat
 import net.novapixelnetwork.gamecore.commandapi.Logger
 import net.novapixelnetwork.spaceraiders.SpaceRaiders
+import net.novapixelnetwork.spaceraiders.data.DataFolders
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.util.Vector
@@ -11,6 +14,8 @@ import java.util.logging.Level
 import java.util.stream.Collectors
 
 data class Hull(val nameID: String, val displayName: String, val turretLocations: List<Vector>, val engineOne: Vector, val engineTwo: Vector){
+
+    val schematic: Schematic = ClipboardFormat.SCHEMATIC.load(File(DataFolders.hulls, "${nameID}.schematic"))
 
     companion object {
 
