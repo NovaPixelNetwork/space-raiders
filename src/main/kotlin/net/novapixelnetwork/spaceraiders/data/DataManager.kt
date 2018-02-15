@@ -4,7 +4,9 @@ import net.novapixelnetwork.gamecore.sql.Connections
 import net.novapixelnetwork.spaceraiders.SpaceRaiders
 import net.novapixelnetwork.spaceraiders.player.SRPlayer
 import net.novapixelnetwork.spaceraiders.player.Squad
+import net.novapixelnetwork.spaceraiders.ship.Engine
 import net.novapixelnetwork.spaceraiders.ship.Hangar
+import net.novapixelnetwork.spaceraiders.ship.Hull
 import net.novapixelnetwork.spaceraiders.ship.Ship
 import net.novapixelnetwork.spaceraiders.world.Planet
 import net.novapixelnetwork.spaceraiders.world.SpaceLocation
@@ -15,6 +17,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -43,7 +46,40 @@ object DataManager: Listener{
         }
     }
 
-    fun loadSquads(){
+    fun load() {
+
+        val c = Connections.grabConnection()
+        try {
+            var ps = c.prepareStatement("SELECT * FROM planets")
+            var rs = ps.executeQuery()
+            while(rs.next()){
+                planets.put(rs.getInt("id"), Planet(rs.getInt("id"), SpaceLocation(rs.getInt("x"), rs.getInt("z"))))
+            }
+            ps = c.prepareStatement("SELECT * FROM squads")
+            rs = ps.executeQuery()
+            while(rs.next()){
+                ps = c.prepareStatement("SELECT uuid FROM players WHERE squad=?")
+                ps.setInt(1, rs.getInt("id"))
+                val squadPlayers = ps.executeQuery()
+                val members: MutableList<UUID> = ArrayList()
+                while(squadPlayers.next()){
+                    members.add(UUID.fromString(squadPlayers.getString("uuid")))
+                }
+                squads.put(rs.getInt("id"), Squad(rs.getInt("id"), UUID.fromString(rs.getString("owner")), members, rs.getString("name"), rs.getInt("planet")))
+            }
+        } finally {
+            c.close()
+        }
+
+        val parts = File(SpaceRaiders.getPlugin().dataFolder, "parts")
+        val hulls = File(parts, "hulls")
+        val engines = File(parts, "engines")
+        hulls.mkdirs()
+        engines.mkdirs()
+
+
+        Hull.loadAll(hulls)
+        Engine.loadAll(engines)
 
     }
 
@@ -76,21 +112,7 @@ object DataManager: Listener{
     }
 
     fun getPlanet(planetID: Int): Planet? {
-        if(planets.containsKey(planetID)) return planets[planetID]
-        val c = Connections.grabConnection()
-        try {
-            val ps = c.prepareStatement("SELECT * FROM planets WHERE id=?")
-            ps.setInt(1, planetID)
-            val rs = ps.executeQuery()
-            if(rs.next()){
-                val planet = Planet(planetID, SpaceLocation(rs.getInt("x"), rs.getInt("z")))
-                planets.put(planetID, planet)
-                return planet
-            }
-        } finally {
-            c.close()
-        }
-        return null
+        return planets[planetID]
     }
 
     fun getShip(shipID: Int): Ship? {

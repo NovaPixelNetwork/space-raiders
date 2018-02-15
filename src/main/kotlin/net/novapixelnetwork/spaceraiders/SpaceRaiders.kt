@@ -25,7 +25,7 @@ class SpaceRaiders : JavaPlugin(){
 
         Connections.grabConnection().close()
         DataManager.createTables()
-        DataManager.loadSquads()
+        DataManager.load()
 
     }
 
