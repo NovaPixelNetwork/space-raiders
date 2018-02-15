@@ -1,5 +1,7 @@
 package net.novapixelnetwork.spaceraiders.ship
 
+import net.novapixelnetwork.spaceraiders.data.DataFolders
+import java.io.File
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -9,8 +11,13 @@ import kotlin.collections.HashMap
 
 class Ship(val id: Int, val hangar: Hangar, val size: Hangar.Size, val owner: UUID, var name: String) {
 
-    init {
+    val partData = File(DataFolders.ships, id.toString())
 
+    init {
+        if(!partData.exists()){
+            partData.mkdir()
+            File(partData, "")
+        }
     }
 
     val engineData: HashMap<Engine, EngineData> = HashMap()

@@ -29,6 +29,11 @@
             <name>bintray</name>
             <url>https://dl.bintray.com/kotlin/squash</url>
         </repository>
+        <repository>
+            <id>fawe-repo</id>
+            <name>FastAsyncWorldEdit</name>
+            <url>http://ci.athion.net/job/FastAsyncWorldEdit/ws/mvn/</url>
+        </repository>
     </repositories>
 
     <properties>
@@ -39,6 +44,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.boydti</groupId>
+            <artifactId>fawe-api</artifactId>
+            <version>latest</version>
+        </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
