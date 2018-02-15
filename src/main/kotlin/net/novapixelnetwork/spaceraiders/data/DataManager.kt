@@ -4,6 +4,7 @@ import net.novapixelnetwork.gamecore.sql.Connections
 import net.novapixelnetwork.spaceraiders.SpaceRaiders
 import net.novapixelnetwork.spaceraiders.player.SRPlayer
 import net.novapixelnetwork.spaceraiders.player.Squad
+import net.novapixelnetwork.spaceraiders.ship.Engine
 import net.novapixelnetwork.spaceraiders.ship.Hangar
 import net.novapixelnetwork.spaceraiders.ship.Hull
 import net.novapixelnetwork.spaceraiders.ship.Ship
@@ -16,6 +17,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -69,9 +71,15 @@ object DataManager: Listener{
             c.close()
         }
 
-        val 
+        val parts = File(SpaceRaiders.getPlugin().dataFolder, "parts")
+        val hulls = File(parts, "hulls")
+        val engines = File(parts, "engines")
+        hulls.mkdirs()
+        engines.mkdirs()
 
-        Hull.loadAll()
+
+        Hull.loadAll(hulls)
+        Engine.loadAll(engines)
 
     }
 

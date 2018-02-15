@@ -30,7 +30,11 @@ data class Hull(val nameID: String, val displayName: String, val turretLocations
                     })
         }
 
-        private fun loadFromFile(file: File): Hull {
+        fun get(nameID: String): Hull?{
+            return hulls[nameID]
+        }
+
+        fun loadFromFile(file: File): Hull {
             if(!file.exists()) throw FileNotFoundException("File ${file.absolutePath} does not exist!")
             val fc = YamlConfiguration.loadConfiguration(file)
             val turretLocations: MutableList<Vector> = ArrayList()

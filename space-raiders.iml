@@ -3,8 +3,8 @@
   <component name="AutoImportedSourceRoots">
     <option name="directories">
       <list>
-        <option value="C:\Users\scara\Documents\Spigot Projects\space-raiders/src/main/kotlin" />
-        <option value="C:\Users\scara\Documents\Spigot Projects\space-raiders/src/test/kotlin" />
+        <option value="$MODULE_DIR$/src/main/kotlin" />
+        <option value="$MODULE_DIR$/src/test/kotlin" />
       </list>
     </option>
   </component>
