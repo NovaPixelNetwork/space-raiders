@@ -17,11 +17,16 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.scheduler.BukkitRunnable
 import java.io.File
 import java.util.*
+import java.util.concurrent.TimeUnit
+import java.util.logging.Level
 import kotlin.collections.ArrayList
 
 object DataManager: Listener{
+
+    private val cachedObjRemove = TimeUnit.MINUTES.toMillis(15) //15 minutes
 
     private val players: HashMap<UUID, SRPlayer> = HashMap()
     private val squads: HashMap<Int, Squad> = HashMap()
@@ -53,7 +58,7 @@ object DataManager: Listener{
             var ps = c.prepareStatement("SELECT * FROM planets")
             var rs = ps.executeQuery()
             while(rs.next()){
-                planets.put(rs.getInt("id"), Planet(rs.getInt("id"), SpaceLocation(rs.getInt("x"), rs.getInt("z"))))
+                planets.put(rs.getInt("id"), Planet(rs.getInt("id"), SpaceLocation(rs.getInt("x"), rs.getInt("z")), rs.getLong("expire_date")))
             }
             ps = c.prepareStatement("SELECT * FROM squads")
             rs = ps.executeQuery()
@@ -80,11 +85,15 @@ object DataManager: Listener{
         hulls.mkdirs()
         engines.mkdirs()
 
-
-
-
         Hull.loadAll(hulls)
         Engine.loadAll(engines)
+
+        object: BukkitRunnable() {
+            override fun run() {
+                save(true)
+            }
+
+        }.runTaskTimer(SpaceRaiders.getPlugin(), TimeUnit.MINUTES.toMillis(5), TimeUnit.MINUTES.toMillis(5))
 
     }
 
@@ -130,7 +139,8 @@ object DataManager: Listener{
             val rs = ps.executeQuery()
             if(rs.next()){
                 val hangar = getHangar(rs.getInt("hangar"))!!
-                val ship = Ship(shipID, hangar, hangar.size, UUID.fromString(rs.getString("owner")), rs.getString("name"))
+                val ship = Ship(shipID, hangar, hangar.size, UUID.fromString(rs.getString("owner")), rs.getString("name"),
+                        Hull.get(rs.getString("hull"))!!, Engine.get(rs.getString("engine"))!!)
                 ships.put(shipID, ship)
                 return ship
             }
@@ -229,16 +239,72 @@ object DataManager: Listener{
         }
     }
 
-    fun savePlayerData(player: SRPlayer){
+    fun saveShipData(ship: Ship){
         val c = Connections.grabConnection()
         try {
-            val ps = c.prepareStatement("UPDATE players SET username=?, squad=?")
-            ps.setString(1, player.username)
-            ps.setObject(2, player.squad)
+            val ps = c.prepareStatement("UPDATE ships SET name=?, engine=?, hull=?")
+            ps.setString(1, ship.name)
+            ps.setString(2, ship.engine.nameID)
+            ps.setString(3, ship.hull.nameID)
             ps.executeUpdate()
         } finally {
             c.close()
         }
+    }
+
+    fun savePlayerData(player: SRPlayer){
+        val c = Connections.grabConnection()
+        try {
+            val ps = c.prepareStatement("UPDATE players SET username=?, squad=? WHERE uuid=?")
+            ps.setString(1, player.username)
+            ps.setObject(2, player.squad)
+            ps.setString(3, player.uuid.toString())
+            ps.executeUpdate()
+        } finally {
+            c.close()
+        }
+    }
+
+    fun saveSquadData(squad: Squad) {
+        val c = Connections.grabConnection()
+        try {
+            val ps = c.prepareStatement("UPDATE squads SET name=? WHERE id=?")
+            ps.setString(1, squad.name)
+            ps.setInt(2, squad.id)
+            ps.executeUpdate()
+        } finally {
+            c.close()
+        }
+    }
+
+    fun save(async: Boolean){
+        SpaceRaiders.getPlugin().logger.log(Level.FINE, "Saving data")
+        val br = object: BukkitRunnable() {
+            override fun run() {
+                //Player Data
+                for((uuid, player) in players){
+                    //If the object is old enough to get save and removed, or if save() isn't being called async (for server shutdown)
+                    if(!((player.cached && System.currentTimeMillis() - player.cachedTime >= cachedObjRemove) || !async)) continue
+                    savePlayerData(player)
+                    players.remove(uuid)
+                }
+                //Ship data
+                for((_, ship) in ships){
+                    saveShipData(ship)
+                }
+
+                //Squad data
+                for((_, squad) in squads) {
+                    saveSquadData(squad)
+                }
+                SpaceRaiders.getPlugin().logger.log(Level.FINE, "Data saved successfully. ")
+            }
+
+        }
+        if(!async) br.run()
+        else br.runTaskAsynchronously(SpaceRaiders.getPlugin())
+
+
     }
 
 
