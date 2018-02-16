@@ -9,14 +9,17 @@ import kotlin.collections.HashMap
  * Created by owner on 1/5/2018.
  */
 
-class Ship(val id: Int, val hangar: Hangar, val size: Hangar.Size, val owner: UUID, var name: String) {
+class Ship(val id: Int, val hangar: Hangar, val size: Hangar.Size, val owner: UUID, var name: String, val hull: Hull, val engine: Engine) {
 
     val partData = File(DataFolders.ships, id.toString())
 
     init {
         if(!partData.exists()){
             partData.mkdir()
-            File(partData, "")
+            val engines = File(partData, "engine")
+            val hulls = File(partData, "hull")
+            Engine.generateEngineData(engines, Engine.getDefault(size))
+            Hull.generateHullData(hulls, Hull.getDefault(size))
         }
     }
 

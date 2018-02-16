@@ -4,3 +4,15 @@ mysql:
   schema: spaceraiders
   user: root
   password: password
+
+
+default-parts:
+  small:
+    hull: scout
+    engine: scout
+  medium:
+    hull: none
+    engine: none
+  large:
+    hull: none
+    engine: none
