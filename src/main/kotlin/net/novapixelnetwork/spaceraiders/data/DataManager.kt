@@ -290,6 +290,8 @@ object DataManager: Listener{
                 }
                 //Ship data
                 for((_, ship) in ships){
+
+                    ship.savePartsData()
                     saveShipData(ship)
                 }
 
