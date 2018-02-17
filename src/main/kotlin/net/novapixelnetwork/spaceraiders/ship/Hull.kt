@@ -49,6 +49,21 @@ data class Hull(val nameID: String, val displayName: String, val turretLocations
             return Hull(file.nameWithoutExtension, fc.getString("display-name"), turretLocations, fc.getVector("engine-one"), fc.getVector("engine-two"))
         }
 
+        fun getDefault(size: Hangar.Size): Hull{
+            return get(SpaceRaiders.getPlugin().config.getString("default-parts." + size.name.toLowerCase() + "-hull"))!!
+        }
+
+        fun generateHullData(location: File, hull: Hull): File {
+            val genFile = File(location, hull.nameID)
+            if(genFile.exists()) throw IllegalArgumentException("Hull data file ${genFile.absolutePath} already exists!")
+            genFile.createNewFile()
+            val config = YamlConfiguration.loadConfiguration(genFile)
+            config.set("turrets-unlocked", 1)
+            config.set("unlocked", false)
+            config.save(genFile)
+            return genFile
+        }
+
         fun reload() {
 
         }

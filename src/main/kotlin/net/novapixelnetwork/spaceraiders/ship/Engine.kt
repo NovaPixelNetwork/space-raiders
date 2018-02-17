@@ -2,6 +2,7 @@ package net.novapixelnetwork.spaceraiders.ship
 
 import com.boydti.fawe.`object`.schematic.Schematic
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat
+import net.novapixelnetwork.spaceraiders.SpaceRaiders
 import net.novapixelnetwork.spaceraiders.data.DataFolders
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.util.Vector
@@ -30,6 +31,20 @@ class Engine(val nameID: String, val displayName: String, val speedModifier: Dou
 
         fun get(nameID: String): Engine? {
             return engines[nameID]
+        }
+
+        fun getDefault(size: Hangar.Size): Engine{
+            return get(SpaceRaiders.getPlugin().config.getString("default-parts." + size.name.toLowerCase() + "-engine"))!!
+        }
+
+        fun generateEngineData(location: File, engine: Engine): File {
+            val genFile = File(location, engine.nameID)
+            if(genFile.exists()) throw IllegalArgumentException("Engine data file ${genFile.absolutePath} already exists!")
+            genFile.createNewFile()
+            val config = YamlConfiguration.loadConfiguration(genFile)
+            config.set("unlocked", false)
+            config.save(genFile)
+            return genFile
         }
 
 

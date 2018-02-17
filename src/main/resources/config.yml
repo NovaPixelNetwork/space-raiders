@@ -4,3 +4,19 @@ mysql:
   schema: spaceraiders
   user: root
   password: password
+
+#The default parts that a ship of each size will start with.
+default-parts:
+  small:
+    hull: scout
+    engine: scout
+  medium:
+    hull: none
+    engine: none
+  large:
+    hull: none
+    engine: none
+
+#Minimum and maximum time for a planet to fade in days (changes only effect planets generated after a change)
+planet-fade-min: 0.5
+planet-fade-max: 1.5
