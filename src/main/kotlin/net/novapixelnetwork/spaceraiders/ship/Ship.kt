@@ -1,5 +1,6 @@
 package net.novapixelnetwork.spaceraiders.ship
 
+import com.boydti.fawe.`object`.schematic.Schematic
 import net.novapixelnetwork.spaceraiders.data.DataFolders
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
@@ -51,6 +52,11 @@ class Ship(val id: Int, val hangar: Hangar, val size: Hangar.Size, val owner: UU
                         hullData.put(hull, HullData(hull, fc.getBoolean("unlocked"), fc.getInt("turrets-unlocked")))
                     } }
         }
+    }
+
+    fun buildSchematic(): Schematic? {
+        //TODO: Will build the hull along with both engines, using the connection points defined as vectors for each point
+        return null
     }
 
     fun savePartsData(){

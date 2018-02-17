@@ -9,6 +9,7 @@ object DataFolders {
     val engines = File(root, "parts/engine")
     val hulls = File(root, "parts/hull")
     val ships = File(root, "ships")
+    val hangars = File(root, "hangar")
 
     init {
 
@@ -16,6 +17,7 @@ object DataFolders {
         hulls.mkdirs()
         hulls.mkdirs()
         ships.mkdirs()
+        hangars.mkdirs()
 
     }
 
