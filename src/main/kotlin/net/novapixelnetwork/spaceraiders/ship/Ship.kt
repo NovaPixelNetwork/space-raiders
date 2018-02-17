@@ -2,6 +2,7 @@ package net.novapixelnetwork.spaceraiders.ship
 
 import com.boydti.fawe.`object`.schematic.Schematic
 import net.novapixelnetwork.spaceraiders.data.DataFolders
+import net.novapixelnetwork.spaceraiders.data.DataManager
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.util.*
@@ -96,6 +97,11 @@ class Ship(val id: Int, val hangar: Hangar, val size: Hangar.Size, val owner: UU
     }
 
     companion object {
+
+        fun from(id: Int): Ship? {
+            return DataManager.getShip(id)
+        }
+
         fun createTable(): String {
             return "CREATE TABLE IF NOT EXISTS ships (" +
                     "id INT NOT NULL AUTO_INCREMENT, " +

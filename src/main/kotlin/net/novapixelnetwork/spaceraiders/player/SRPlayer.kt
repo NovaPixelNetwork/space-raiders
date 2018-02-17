@@ -35,6 +35,10 @@ class SRPlayer(val uuid: UUID, var username: String, var squad: Int?)  {
 
     companion object {
 
+        fun from(username: String): SRPlayer? {
+            return DataManager.getPlayer(username)
+        }
+
         fun from(player: Player): SRPlayer {
             return DataManager.getPlayer(player.uniqueId)
         }

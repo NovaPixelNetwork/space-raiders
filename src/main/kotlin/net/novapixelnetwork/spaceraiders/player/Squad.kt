@@ -51,6 +51,11 @@ class Squad(val id: Int, private val ownerID: UUID, val members: MutableList<UUI
     }
 
     companion object {
+
+        fun from(id: Int): Squad? {
+            return DataManager.getSquad(id)
+        }
+
         fun createTable(): String {
             return "CREATE TABLE IF NOT EXISTS squads (" +
                     "id NOT NULL AUTO_INCREMENT, " +
