@@ -1,1 +1,8 @@
+sudo: true
 language: java
+cache:
+  directories:
+    - $HOME/.m2
+before_install:
+  - chmod +x installSpigot.sh
+  - if [ ! -d "$HOME/.m2/repository/org/spigotmc" ]; then ./installSpigot.sh 1.12.2 ; else echo "Not compiling Spigot because it is already in our maven" ; fi
