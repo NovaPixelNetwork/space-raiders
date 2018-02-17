@@ -38,8 +38,8 @@ class Hangar(val id: Int, val center: Location, val size: Size, val owner: UUID,
             return sizeName
         }
 
-        fun getSchematic(): Schematic {
-
+        fun getSchematic(): Schematic? {
+            return null
         }
     }
 }
