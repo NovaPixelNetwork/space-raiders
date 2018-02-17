@@ -1,5 +1,6 @@
 package net.novapixelnetwork.spaceraiders.ship
 
+import com.boydti.fawe.`object`.schematic.Schematic
 import net.novapixelnetwork.spaceraiders.data.DataManager
 import net.novapixelnetwork.spaceraiders.world.Planet
 import org.bukkit.Location
@@ -35,6 +36,10 @@ class Hangar(val id: Int, val center: Location, val size: Size, val owner: UUID,
 
         override fun toString(): String {
             return sizeName
+        }
+
+        fun getSchematic(): Schematic {
+
         }
     }
 }
