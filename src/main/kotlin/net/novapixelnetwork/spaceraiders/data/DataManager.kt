@@ -10,6 +10,7 @@ import net.novapixelnetwork.spaceraiders.ship.Hull
 import net.novapixelnetwork.spaceraiders.ship.Ship
 import net.novapixelnetwork.spaceraiders.world.Planet
 import net.novapixelnetwork.spaceraiders.world.SpaceLocation
+import net.novapixelnetwork.spaceraiders.world.generation.Generator
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.OfflinePlayer
@@ -58,7 +59,7 @@ object DataManager: Listener{
             var ps = c.prepareStatement("SELECT * FROM planets")
             var rs = ps.executeQuery()
             while(rs.next()){
-                planets.put(rs.getInt("id"), Planet(rs.getInt("id"), SpaceLocation(rs.getInt("x"), rs.getInt("z")), rs.getLong("expire_date")))
+                planets.put(rs.getInt("id"), Planet(rs.getInt("id"), SpaceLocation(rs.getInt("x"), rs.getInt("z")), rs.getLong("expire_date"), Generator.valueOf(rs.getString("generator"))))
             }
             ps = c.prepareStatement("SELECT * FROM squads")
             rs = ps.executeQuery()
@@ -123,6 +124,23 @@ object DataManager: Listener{
             c.close()
         }
         return null
+    }
+
+    fun loadHangarsAndShips(planet: Planet) {
+        val c = Connections.grabConnection()
+        try {
+            val ps = c.prepareStatement("SELECT * FROM hangars WHERE planet=?")
+            ps.setInt(1, planet.id)
+            val rs = ps.executeQuery()
+            while(rs.next()){
+                val loc = Location(Bukkit.getWorld("planet${rs.getInt("planet")}"), rs.getInt("x").toDouble(), rs.getInt("y").toDouble(), rs.getInt("z").toDouble())
+                val hangar = Hangar(rs.getInt("id"), loc, Hangar.Size.valueOf(rs.getString("size")), UUID.fromString(rs.getString("owner")), rs.getInt("ship"), rs.getBoolean("auto_generated"), planet)
+                hangar.ship
+                hangars.put(hangar.id, hangar)
+            }
+        } finally {
+            c.close()
+        }
     }
 
     fun getPlanet(planetID: Int): Planet? {
