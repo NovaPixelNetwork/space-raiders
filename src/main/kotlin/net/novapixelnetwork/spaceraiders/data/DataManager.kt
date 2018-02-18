@@ -113,8 +113,9 @@ object DataManager: Listener{
                 val center = Location(planet.world!!, rs.getInt("x").toDouble(),
                         rs.getInt("y").toDouble(),
                         rs.getInt("z").toDouble())
+                val shipID = ships.filter { it.value.hangar.id == hangarID }.toList().first().second
                 val hangar = Hangar(hangarID, center, Hangar.Size.valueOf(rs.getString("size")),
-                        UUID.fromString(rs.getString("owner")), rs.getInt("ship"),
+                        UUID.fromString(rs.getString("owner")), shipID.id,
                         rs.getBoolean("auto_generated"),
                         planet)
                 hangars.put(hangar.id, hangar)
@@ -143,6 +144,18 @@ object DataManager: Listener{
         }
     }
 
+    fun addToCache(planet: Planet) {
+        planets.put(planet.id, planet)
+    }
+
+    fun addToCache(hangar: Hangar) {
+        hangars.put(hangar.id, hangar)
+    }
+
+    fun addToCache(ship: Ship) {
+        ships.put(ship.id, ship)
+    }
+
     fun getPlanet(planetID: Int): Planet? {
         return planets[planetID]
     }
@@ -156,7 +169,7 @@ object DataManager: Listener{
             ps.setInt(1, shipID)
             val rs = ps.executeQuery()
             if(rs.next()){
-                val hangar = getHangar(rs.getInt("hangar"))!!
+                val hangar = DataManager.getHangar(rs.getInt("hangar"))!!
                 val ship = Ship(shipID, hangar, hangar.size, UUID.fromString(rs.getString("owner")), rs.getString("name"),
                         Hull.get(rs.getString("hull"))!!, Engine.get(rs.getString("engine"))!!)
                 ships.put(shipID, ship)
