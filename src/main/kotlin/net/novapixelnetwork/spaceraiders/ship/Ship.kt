@@ -12,7 +12,7 @@ import kotlin.collections.HashMap
  * Created by owner on 1/5/2018.
  */
 
-class Ship(val id: Int, val hangar: Hangar, val size: Hangar.Size, val owner: UUID, var name: String, val hull: Hull, val engine: Engine) {
+class Ship(val id: Int, val hangar: Hangar, val size: Hangar.Size, val owner: UUID, var name: String?, val hull: Hull, val engine: Engine) {
 
     val partData = File(DataFolders.ships, id.toString())
     val engineFolder = File(partData, "engine")
@@ -104,7 +104,7 @@ class Ship(val id: Int, val hangar: Hangar, val size: Hangar.Size, val owner: UU
 
         fun createTable(): String {
             return "CREATE TABLE IF NOT EXISTS ships (" +
-                    "id INT NOT NULL AUTO_INCREMENT, " +
+                    "id INTEGER NOT NULL, " +
                     "owner VARCHAR(36) NOT NULL," +
                     "name VARCHAR(16) NULL," +
                     "hangar INT NOT NULL," +

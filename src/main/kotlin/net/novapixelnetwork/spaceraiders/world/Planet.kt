@@ -58,7 +58,7 @@ class Planet(val id: Int, val location: SpaceLocation, val expireTime: Long, val
 
         fun createTable(): String {
             return "CREATE TABLE planets (" +
-                    "id INT NOT NULL AUTO_INCREMENT," +
+                    "id INTEGER NOT NULL," +
                     "x INT NOT NULL," +
                     "z INT NOT NULL," +
                     "expire_date BIGINT NOT NULL, " +

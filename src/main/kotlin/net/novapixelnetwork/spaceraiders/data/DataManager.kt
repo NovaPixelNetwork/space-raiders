@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.scheduler.BukkitRunnable
 import java.io.File
+import java.sql.SQLException
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.logging.Level
@@ -350,6 +351,37 @@ object DataManager: Listener{
     private fun onPlayerQuit(e: PlayerQuitEvent){
         savePlayerData(players[e.player.uniqueId]!!)
         players.remove(e.player.uniqueId)
+    }
+
+    object IDGen {
+
+        var genHangarID: Int
+            get() = ++field
+        var genShipID: Int
+            get() = ++field
+        var genSquadID: Int
+            get() = ++field
+        var genPlanetID: Int
+            get() = ++field
+
+        init {
+            val c = Connections.grabConnection()
+            try {
+                val statement = "SELECT id FROM %table% ORDER BY id DESC LIMIT 1"
+                var rs = c.prepareStatement(statement.replace("%table%", "hangars")).executeQuery()
+                genHangarID = if(rs.next()) rs.getInt("id") else 0
+                rs = c.prepareStatement(statement.replace("%table%", "ships")).executeQuery()
+                genShipID = if(rs.next()) rs.getInt("id") else 0
+                rs = c.prepareStatement(statement.replace("%table", "squads")).executeQuery()
+                genSquadID = if(rs.next()) rs.getInt("id") else 0
+                rs = c.prepareStatement(statement.replace("%table%", "planets")).executeQuery()
+                genPlanetID = if(rs.next()) rs.getInt("id") else 0
+            } finally {
+                c.close()
+            }
+        }
+
+
     }
 
 }

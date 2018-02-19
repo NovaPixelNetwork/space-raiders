@@ -58,7 +58,7 @@ class Squad(val id: Int, private val ownerID: UUID, val members: MutableList<UUI
 
         fun createTable(): String {
             return "CREATE TABLE IF NOT EXISTS squads (" +
-                    "id NOT NULL AUTO_INCREMENT, " +
+                    "id INTEGER NOT NULL, " +
                     "owner VARCHAR(16) NOT NULL, " +
                     "name VARCHAR(16) NOT NULL, " +
                     "planet INT NOT NULL, " +
