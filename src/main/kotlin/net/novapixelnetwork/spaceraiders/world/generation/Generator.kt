@@ -6,8 +6,8 @@ enum class Generator {
     VOLCANIC;
 
     fun getGenerator(): ChunkGenerator {
-        when(this) {
-            VOLCANIC -> return VolcanicWorldGenerator()
+        return when(this) {
+            VOLCANIC -> VolcanicWorldGenerator()
         }
     }
 }

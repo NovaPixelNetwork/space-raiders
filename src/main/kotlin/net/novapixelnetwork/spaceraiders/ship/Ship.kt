@@ -3,6 +3,7 @@ package net.novapixelnetwork.spaceraiders.ship
 import com.boydti.fawe.`object`.schematic.Schematic
 import net.novapixelnetwork.spaceraiders.data.DataFolders
 import net.novapixelnetwork.spaceraiders.data.DataManager
+import net.novapixelnetwork.spaceraiders.ship.state.*
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.util.*
@@ -21,7 +22,16 @@ class Ship(val id: Int, val hangar: Hangar, val size: Hangar.Size, val owner: UU
     val engineData: HashMap<Engine, EngineData> = HashMap()
     val hullData: HashMap<Hull, HullData> = HashMap()
 
-    var status = ShipStatus.HANGAR
+    var state: ShipState = HangarState(this)
+
+    val stateType: State
+    get() {
+        if(state is HangarState) return State.HANGAR
+        if(state is BattleState) return State.BATTLE
+        if(state is TravelState) return State.TRAVEL
+        if(state is PlanetState) return State.PLANET
+        throw IllegalStateException("The state was not set correctly!")
+    }
 
 
     init {
@@ -54,6 +64,7 @@ class Ship(val id: Int, val hangar: Hangar, val size: Hangar.Size, val owner: UU
                     } }
         }
     }
+
 
     fun buildSchematic(): Schematic? {
         //TODO: Will build the hull along with both engines, using the connection points defined as vectors for each point
@@ -117,5 +128,9 @@ class Ship(val id: Int, val hangar: Hangar, val size: Hangar.Size, val owner: UU
     data class EngineData(val engine: Engine, var unlocked: Boolean)
 
     data class HullData(val hull: Hull, var unlocked: Boolean, var turretsUnlocked: Int)
+
+    enum class State {
+        HANGAR, TRAVEL, BATTLE, PLANET
+    }
 
 }
