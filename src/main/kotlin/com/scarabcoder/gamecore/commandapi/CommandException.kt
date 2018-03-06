@@ -13,13 +13,9 @@
  *  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+package com.scarabcoder.gamecore.commandapi
+
 /**
- * Created by owner on 1/8/2018.
+ * Created by owner on 12/27/2017.
  */
-class Test {
-
-    fun main(vararg params: String){
-
-    }
-
-}
+class CommandException(val name: String) : Exception()

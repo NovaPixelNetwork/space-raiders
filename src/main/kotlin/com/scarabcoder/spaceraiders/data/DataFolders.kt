@@ -13,13 +13,28 @@
  *  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
- * Created by owner on 1/8/2018.
- */
-class Test {
+package com.scarabcoder.spaceraiders.data
 
-    fun main(vararg params: String){
+import com.scarabcoder.spaceraiders.SpaceRaiders
+import java.io.File
+
+object DataFolders {
+
+    val root = SpaceRaiders.getPlugin().dataFolder
+    val engines = File(root, "parts/engine")
+    val hulls = File(root, "parts/hull")
+    val ships = File(root, "ships")
+    val hangars = File(root, "hangar")
+
+    init {
+
+        engines.mkdirs()
+        hulls.mkdirs()
+        hulls.mkdirs()
+        ships.mkdirs()
+        hangars.mkdirs()
 
     }
+
 
 }

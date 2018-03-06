@@ -15,3 +15,5 @@ gradle-app.setting
 
 .idea/
 target/
+*.iml
+dependency-reduced-pom.xml

@@ -1,4 +1,4 @@
 name: SpaceRaiders
-main: net.novapixelnetwork.spaceraiders.SpaceRaiders
+main: com.scarabcoder.spaceraiders.SpaceRaiders
 version: 0.0.1
-authors: [NovaPixel Development Team, Nick Harris (ScarabCoder)]
+authors: [Nicholas Harris (ScarabCoder)]
