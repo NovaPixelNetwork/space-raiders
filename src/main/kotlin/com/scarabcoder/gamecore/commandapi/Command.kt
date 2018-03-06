@@ -13,13 +13,6 @@
  *  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
- * Created by owner on 1/8/2018.
- */
-class Test {
+package com.scarabcoder.gamecore.commandapi
 
-    fun main(vararg params: String){
-
-    }
-
-}
+annotation class Command
